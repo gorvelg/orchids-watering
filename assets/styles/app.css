@@ -1,0 +1,83 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+}
+main {
+    margin-inline: 24px;
+    margin-block: 24px;
+}
+.orchid-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+}
+.orchid-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    background: white;
+}
+
+.orchid-card h2 {
+    margin-top: 0;
+}
+.watering-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
+/*.watering-btn.water {*/
+/*    color: #3B82F6;*/
+/*}*/
+
+/*.watering-btn.bloom {*/
+/*    color: #D946EF;*/
+/*}*/
+
+/*.watering-btn.grow {*/
+/*    color: #22C55E;*/
+/*}*/
+
+.watering-btn.water {
+    background: #3B82F6;
+}
+
+.watering-btn.bloom {
+    background: #D946EF;
+
+}
+
+.watering-btn.grow {
+    background: #22C55E;
+}
+
+.orchid-card button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.add-btn {
+    border-radius: 50%;
+    background: cornflowerblue;
+    color: white;
+    padding: 8px;
+    display: flex;
+    width: 24px;
+    position: fixed;
+    z-index: 10;
+    right: 24px;
+    bottom: 24px;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+}
+
+@media screen and (min-width: 1440px) {
+    .orchid-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

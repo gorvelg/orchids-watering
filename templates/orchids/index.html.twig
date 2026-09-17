@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des orchidées{% endblock %}
+
+{% block body %}
+    <div class="orchid-grid">
+        {%set wateringIcons = {
+            'bloom': 'flower',
+            'grow': 'leaf',
+            'water': 'water'
+        } %}
+    {% for orchid in orchids %}
+            <div class="orchid-card">
+
+                <h2>{{ orchid.name }}</h2>
+                <p>
+                    Dernier arrosage :
+                    <strong>
+                        {% if orchid.waterings is not empty %}
+                            {{ orchid.waterings.last.wateredAt|date('d/m/Y à H:i') }}
+                        {% else %}
+                            Aucun arrosage
+                        {% endif %}
+                    </strong>
+                </p>
+
+                <p>
+                    Prochain arrosage :
+                    <strong>{{ nextWaterings[orchid.id].type.toFrench() }}</strong>
+                </p>
+
+                <form
+                    method="post"
+                    action="{{ path('app_orchid_water', {id: orchid.id}) }}"
+                >
+                    <input
+                        type="hidden"
+                        name="_token"
+                        value="{{ csrf_token('water-' ~ orchid.id) }}"
+                    >
+
+                    <button class="watering-btn {{ nextWaterings[orchid.id].type.value }}" type="submit">
+                        {% include 'components/icons/' ~ wateringIcons[nextWaterings[orchid.id].type.value] ~ '.html.twig' %}
+                        Arroser avec
+                        {{ nextWaterings[orchid.id].type.toFrench() }}
+                    </button>
+                </form>
+            </div>
+
+    {% endfor %}
+    </div>
+    <a class="add-btn" aria-label="Ajouter" href="{{ path('app_orchid_create') }}">+</a>
+{% endblock %}
