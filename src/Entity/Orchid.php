@@ -6,6 +6,7 @@ use App\Repository\OrchidRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrchidRepository::class)]
 class Orchid
@@ -16,6 +17,8 @@ class Orchid
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 2, minMessage: 'Le nom doit contenir au moins 1 caractère.', maxMessage: 'Le nom ne doit pas dépasser 100 caractères.')]
     private ?string $name = null;
 
     /**

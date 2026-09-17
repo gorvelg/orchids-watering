@@ -4,6 +4,9 @@
 
 {% block body %}
     {{ form_start(form) }}
+    {{ form_label(form.name) }}
+    {{ form_widget(form.name) }}
+    {{ form_errors(form.name) }}
     <button type="submit">
         Créer
     </button>
