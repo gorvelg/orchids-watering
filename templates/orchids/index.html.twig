@@ -3,35 +3,50 @@
 {% block title %}Liste des orchidées{% endblock %}
 
 {% block body %}
+
+    {% set wateringIcons = {
+        'bloom': 'flower',
+        'grow': 'leaf',
+        'water': 'water'
+    } %}
+
     <div class="orchid-grid">
-        {%set wateringIcons = {
-            'bloom': 'flower',
-            'grow': 'leaf',
-            'water': 'water'
-        } %}
-    {% for orchid in orchids %}
+
+        {% for orchid in orchids %}
+
             <div class="orchid-card">
 
                 <h2>{{ orchid.name }}</h2>
+
                 <p>
                     Dernier arrosage :
+
                     <strong>
                         {% if orchid.waterings is not empty %}
-                            {{ orchid.waterings.last.wateredAt|date('d/m/Y à H:i') }}
+                            {{ orchid.waterings.first.wateredAt|date('d/m/Y à H:i') }}
                         {% else %}
                             Aucun arrosage
                         {% endif %}
                     </strong>
                 </p>
 
+                {% if lastWaterings[orchid.id] is defined %}
+                    <p>
+                        {{ lastWaterings[orchid.id] }}
+                    </p>
+                {% endif %}
+
                 <p>
                     Prochain arrosage :
-                    <strong>{{ nextWaterings[orchid.id].type.toFrench() }}</strong>
+
+                    <strong>
+                        {{ nextWaterings[orchid.id].type.toFrench() }}
+                    </strong>
                 </p>
 
                 <form
                     method="post"
-                    action="{{ path('app_orchid_water', {id: orchid.id}) }}"
+                    action="{{ path('app_orchid_water', { id: orchid.id }) }}"
                 >
                     <input
                         type="hidden"
@@ -39,15 +54,52 @@
                         value="{{ csrf_token('water-' ~ orchid.id) }}"
                     >
 
-                    <button class="watering-btn {{ nextWaterings[orchid.id].type.value }}" type="submit">
+                    <button
+                        class="btn watering-btn {{ nextWaterings[orchid.id].type.value }}"
+                        type="submit"
+                    >
                         {% include 'components/icons/' ~ wateringIcons[nextWaterings[orchid.id].type.value] ~ '.html.twig' %}
+
                         Arroser avec
                         {{ nextWaterings[orchid.id].type.toFrench() }}
                     </button>
+
                 </form>
+
+                <form
+                    class="delete-form"
+                    method="post"
+                    action="{{ path('app_orchid_delete', { id: orchid.id }) }}"
+                    onsubmit="return confirm('Supprimer cette orchidée ?');"
+                >
+                    <input
+                        type="hidden"
+                        name="_token"
+                        value="{{ csrf_token('delete-' ~ orchid.id) }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="delete-btn"
+                        aria-label="Supprimer {{ orchid.name }}"
+                    >
+                        {% include 'components/icons/delete.html.twig' %}
+                    </button>
+
+                </form>
+
             </div>
 
-    {% endfor %}
+        {% endfor %}
+
     </div>
-    <a class="add-btn" aria-label="Ajouter" href="{{ path('app_orchid_create') }}">+</a>
+
+    <a
+        class="add-btn"
+        aria-label="Ajouter"
+        href="{{ path('app_orchid_create') }}"
+    >
+        +
+    </a>
+
 {% endblock %}

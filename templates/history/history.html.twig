@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique{% endblock %}
+
+{% block body %}
+
+    {% for orchid in orchids %}
+        <h2>{{ orchid.name }}</h2>
+
+        {% for watering in orchid.waterings |slice(0, 10)%}
+            <p>
+                {{ watering.wateredAt|date('d/m/Y à H:i') }}
+                -
+                {{ watering.type.toFrench() }}
+            </p>
+        {% else %}
+            <p>Aucun arrosage</p>
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}

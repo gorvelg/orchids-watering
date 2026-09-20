@@ -16,6 +16,7 @@ main {
     border-radius: 12px;
     padding: 20px;
     background: white;
+    position: relative;
 }
 
 .orchid-card h2 {
@@ -27,17 +28,6 @@ main {
     gap: 8px;
     color: white;
 }
-/*.watering-btn.water {*/
-/*    color: #3B82F6;*/
-/*}*/
-
-/*.watering-btn.bloom {*/
-/*    color: #D946EF;*/
-/*}*/
-
-/*.watering-btn.grow {*/
-/*    color: #22C55E;*/
-/*}*/
 
 .watering-btn.water {
     background: #3B82F6;
@@ -52,7 +42,7 @@ main {
     background: #22C55E;
 }
 
-.orchid-card button {
+.orchid-card .btn {
     padding: 10px 16px;
     border: 0;
     border-radius: 8px;
@@ -74,6 +64,24 @@ main {
     align-items: center;
     justify-content: center;
     aspect-ratio: 1 / 1;
+}
+.delete-form{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+.delete-btn{
+    background: #dc3545;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
 }
 
 @media screen and (min-width: 1440px) {

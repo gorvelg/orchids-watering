@@ -18,15 +18,37 @@ final class OrchidsController extends AbstractController
     public function index(
         EntityManagerInterface $entityManager,
         WateringCycleService $wateringCycleService,
-    ): Response
-    {
-        $orchids = $entityManager->getRepository(Orchid::class)->findAll();
+    ): Response {
+        $orchids = $entityManager
+            ->getRepository(Orchid::class)
+            ->findAll();
 
         $nextWaterings = [];
+        $lastWaterings = [];
+
+        $now = new \DateTimeImmutable();
 
         foreach ($orchids as $orchid) {
+
+            $lastWatering = $orchid->getWaterings()->first();
+
+            if ($lastWatering) {
+                $wateredAt = $lastWatering->getWateredAt();
+
+                $interval = $wateredAt->diff($now);
+                $days = $interval->days;
+
+                if ($days === 0) {
+                    $lastWaterings[$orchid->getId()] = "Aujourd'hui";
+                } elseif ($days === 1) {
+                    $lastWaterings[$orchid->getId()] = 'Il y a 1 jour';
+                } else {
+                    $lastWaterings[$orchid->getId()] = 'Il y a ' . $days . ' jours';
+                }
+            }
+
             $nextWaterings[$orchid->getId()] = [
-                'step' => $wateringCycleService->getNextType($orchid),
+                'step' => $wateringCycleService->getNextStep($orchid),
                 'type' => $wateringCycleService->getNextType($orchid),
             ];
         }
@@ -35,6 +57,7 @@ final class OrchidsController extends AbstractController
             'controller_name' => 'Liste des orchidées',
             'orchids' => $orchids,
             'nextWaterings' => $nextWaterings,
+            'lastWaterings' => $lastWaterings,
         ]);
     }
 
@@ -43,11 +66,13 @@ final class OrchidsController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ?Orchid $orchid = null,
-    ){
+    ): Response {
         if (!$orchid) {
             $orchid = new Orchid();
         }
+
         $form = $this->createForm(OrchidType::class, $orchid);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -60,20 +85,44 @@ final class OrchidsController extends AbstractController
         return $this->render('orchids/create.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
 
+    #[Route('/orchid/{id}/delete', name: 'app_orchid_delete', methods: ['POST'])]
+    public function deleteOrchid(
+        Orchid $orchid,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): Response {
+        if ($this->isCsrfTokenValid(
+            'delete-' . $orchid->getId(),
+            $request->request->get('_token')
+        )) {
+            $entityManager->remove($orchid);
+            $entityManager->flush();
+        }
 
+        return $this->redirectToRoute('app_orchids_index');
     }
 
     #[Route('/orchid/{id}/water', name: 'app_orchid_water', methods: ['POST'])]
     public function water(
         Orchid $orchid,
+        Request $request,
         WateringCycleService $cycleService,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
+        if (!$this->isCsrfTokenValid(
+            'water-' . $orchid->getId(),
+            $request->request->get('_token')
+        )) {
+            return $this->redirectToRoute('app_orchids_index');
+        }
+
         $step = $cycleService->getNextStep($orchid);
         $type = $cycleService->getNextType($orchid);
 
         $watering = new Watering();
+
         $watering->setOrchid($orchid);
         $watering->setCycleStep($step);
         $watering->setType($type);

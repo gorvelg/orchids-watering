@@ -24,7 +24,13 @@ class Orchid
     /**
      * @var Collection<int, Watering>
      */
-    #[ORM\OneToMany(targetEntity: Watering::class, mappedBy: 'orchid')]
+    #[ORM\OneToMany(
+        targetEntity: Watering::class,
+        mappedBy: 'orchid',
+        cascade: ['remove'],
+        orphanRemoval: true,
+    )]
+    #[ORM\OrderBy(['wateredAt' => 'DESC'])]
     private Collection $waterings;
 
     public function __construct()
