@@ -18,7 +18,7 @@ class Orchid
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 1, max: 2, minMessage: 'Le nom doit contenir au moins 1 caractère.', maxMessage: 'Le nom ne doit pas dépasser 100 caractères.')]
+    #[Assert\Length(min: 1, max: 100, minMessage: 'Le nom doit contenir au moins 1 caractère.', maxMessage: 'Le nom ne doit pas dépasser 100 caractères.')]
     private ?string $name = null;
 
     /**

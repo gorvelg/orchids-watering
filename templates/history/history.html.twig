@@ -4,18 +4,50 @@
 
 {% block body %}
 
-    {% for orchid in orchids %}
-        <h2>{{ orchid.name }}</h2>
+    <div class="history-list">
 
-        {% for watering in orchid.waterings |slice(0, 10)%}
-            <p>
-                {{ watering.wateredAt|date('d/m/Y à H:i') }}
-                -
-                {{ watering.type.toFrench() }}
-            </p>
-        {% else %}
-            <p>Aucun arrosage</p>
+        {% for orchid in orchids %}
+
+            <section class="history-card">
+
+                <h2 class="history-card__title">
+                    {{ orchid.name }}
+                </h2>
+
+                <div class="history-card__items">
+
+                    {% for watering in orchid.waterings|slice(0, 10) %}
+
+                        <div class="history-item">
+
+                           <span class="history-item__date">
+                                {{ watering.wateredAt|format_date(
+                                    pattern='EEEE d MMMM y',
+                                    locale='fr'
+                                ) }}
+                            </span>
+
+                            <span class="history-item__type {{ watering.type.value }}">
+                                {% include 'components/icons/' ~ watering.type.value ~ '.html.twig' %}
+                                {{ watering.type.toFrench() }}
+                            </span>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="history-empty">
+                            Aucun arrosage
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
         {% endfor %}
-    {% endfor %}
+
+    </div>
 
 {% endblock %}

@@ -16,7 +16,7 @@ class WateringCycleService
 
     public function getNextStep(Orchid $orchid): int
     {
-        $lastWatering = $orchid->getWaterings()->last();
+        $lastWatering = $orchid->getWaterings()->first();
 
         if (!$lastWatering) {
             return 0;

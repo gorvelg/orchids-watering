@@ -4,12 +4,6 @@
 
 {% block body %}
 
-    {% set wateringIcons = {
-        'bloom': 'flower',
-        'grow': 'leaf',
-        'water': 'water'
-    } %}
-
     <div class="orchid-grid">
 
         {% for orchid in orchids %}
@@ -58,7 +52,7 @@
                         class="btn watering-btn {{ nextWaterings[orchid.id].type.value }}"
                         type="submit"
                     >
-                        {% include 'components/icons/' ~ wateringIcons[nextWaterings[orchid.id].type.value] ~ '.html.twig' %}
+                        {% include 'components/icons/' ~ nextWaterings[orchid.id].type.value ~ '.html.twig' %}
 
                         Arroser avec
                         {{ nextWaterings[orchid.id].type.toFrench() }}
