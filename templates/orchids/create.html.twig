@@ -1,14 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des orchidées{% endblock %}
+{% block title %}Créer une orchidée{% endblock %}
 
 {% block body %}
-    {{ form_start(form) }}
-    {{ form_label(form.name) }}
-    {{ form_widget(form.name) }}
-    {{ form_errors(form.name) }}
-    <button class="btn" type="submit">
-        Créer
-    </button>
-    {{ form_end(form) }}
+
+    <div class="orchid-form-card">
+
+        <h1 class="orchid-form-title">
+            Ajouter une orchidée
+        </h1>
+
+        {{ form_start(form, {
+            attr: {
+                class: 'orchid-form'
+            }
+        }) }}
+
+        <div class="form-group">
+
+            {{ form_label(form.name, null, {
+                label_attr: {
+                    class: 'form-label'
+                }
+            }) }}
+
+            {{ form_widget(form.name, {
+                attr: {
+                    class: 'form-input',
+                    placeholder: 'Nom de l\'orchidée'
+                }
+            }) }}
+
+            <div class="form-error">
+                {{ form_errors(form.name) }}
+            </div>
+
+        </div>
+
+        <button class="btn form-submit" type="submit">
+            Créer
+        </button>
+
+        {{ form_end(form) }}
+
+    </div>
+
 {% endblock %}
