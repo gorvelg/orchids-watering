@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class OrchidsController extends AbstractController
 {
-    #[Route('/orchids', name: 'app_orchids_index')]
+    #[Route('/', name: 'app_orchids_index')]
     public function index(
         EntityManagerInterface $entityManager,
         WateringCycleService $wateringCycleService,
